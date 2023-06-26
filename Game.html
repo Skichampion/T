@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+
+
+
+    .circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      position: absolute;
+      background-color: purple;
+      left: 1000px;
+      top: 450px;
+      z-index: 1;
+    }
+
+    .small-square {
+      display: inline-block;
+      width: 100px;
+      height: 1000px;
+      background-color: black;
+      margin-right: 1500px;
+    }
+
+    .door {
+      width: 20px;
+      height: 1100px;
+      background-color: brown;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .other-square {
+      display: inline-block;
+      width: 100px;
+      height: 1000px;
+      background-color: blue;
+      margin-left: 10px; /* Adjust the margin value */
+    }
+
+    .circle2 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      position: absolute;
+      background-color: black;
+      top: 450px;
+      left: 500px;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="locked-element"></div>
+  <div class="small-square"></div>
+  <div class="other-square"></div>
+  <div class="circle"></div>
+  <div class="circle2"></div>
+  <div class="door"></div>
+  <div class="locked-element"></div>
+
+  <p id="score2" style="position: absolute; left: 500px; top: 50px;">Score = 0</p>
+  <p id="score1" style="position: absolute; left: 1000px; top: 50px;">Score = 0</p>
+
+  <button id="restart" style="display: none; border-radius: 30%; width: 200px; height: 200px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);" onclick="restart()">start round 2</button>
+
+  <script>
+    var positionX = 1000; // Adjusted starting position
+    var positionY = 500; // Adjusted starting position
+    var speed = 50;
+    var circle = document.querySelector('.circle');
+    var isCollision = false;
+    var small = document.querySelector('.small-square');
+    var priority1 = false;
+    var priority2 = false;
+
+    function checksquare() {
+      var circle1a = circle.getBoundingClientRect();
+      var circle2a = circle2.getBoundingClientRect();
+
+      if (
+        priority1 === false &&
+        priority2 === true &&
+        circle1a.left < circle2a.right &&
+        circle1a.right > circle2a.left &&
+        circle1a.top < circle2a.bottom &&
+        circle1a.bottom > circle2a.top
+      ) {
+        priority1 = false;
+        priority();
+      }
+
+      if (
+        priority2 === true &&
+        circle1a.left < circle2a.right &&
+        circle1a.right > circle2a.left &&
+        circle1a.top < circle2a.bottom &&
+        circle1a.bottom > circle2a.top
+      ) {
+        priority2 = false;
+        priority();
+      } else {
+        priority2 = true;
+      }
+    }
+    function priority() {
+      var circle1a = circle.getBoundingClientRect();
+      var circle2a = circle2.getBoundingClientRect();
+      var small2Rect = small2.getBoundingClientRect();
+      Ez = document.getElementById("restart")
+
+      if (
+        (priority1 === false && priority2 === true) ||
+        (priority1 === true && priority2 === false)
+      ) {
+        if (
+          (circle1a.left < circle2a.right &&
+            circle1a.right > circle2a.left &&
+            circle1a.top < circle2a.bottom &&
+            circle1a.bottom > circle2a.top) ||
+          (circle1a.left < small2Rect.right &&
+            circle1a.right > small2Rect.left &&
+            circle1a.top < small2Rect.bottom &&
+            circle1a.bottom > small2Rect.top)
+        ) {
+          circle.style.left = "1000px";
+          circle.style.top = "450px";
+          positionX = 1000;
+          positionY = 500;
+          
+          
+        }
+
+        if (
+          (circle2a.left < circle1a.right &&
+            circle2a.right > circle1a.left &&
+            circle2a.top < circle1a.bottom &&
+            circle2a.bottom > circle1a.top) ||
+          (circle2a.left < small2Rect.right &&
+            circle2a.right > small2Rect.left &&
+            circle2a.top < small2Rect.bottom &&
+            circle2a.bottom > small2Rect.top)
+        ) {
+          circle2.style.left = "500px";
+          circle2.style.top = "450px";
+          positionX2 = 500;
+          positionY2 = 450;
+         
+        }
+      }
+    }
+
+    var positionX2 = 500;
+    var positionY2 = 450;
+    var speed2 = 50;
+    var circle2 = document.querySelector('.circle2');
+    var small2 = document.querySelector('.other-square');
+    var gameOn = true;
+    var score = 0;
+    var score2 = 0;
+    var ele1 = document.getElementById("score1");
+    var ele2 = document.getElementById("score2");
+    var number = 2;
+    var round = 2;
+    var button = document.getElementById("restart");
+
+    function restart() {
+      positionX = 1000;
+      circle.style.left = positionX + "px";
+      positionY = 450;
+      circle.style.top = positionY + "px";
+      positionX2 = 500;
+      circle2.style.left = positionX2 + "px";
+      positionY2 = 450;
+      circle2.style.top = positionY2 + "px";
+      gameOn = true;
+      button.style.display = "none";
+      circle.style.backgroundColor = "purple";
+      circle2.style.backgroundColor = "black";
+      speed = 50;
+      speed2 = 50;
+      round += 1;
+      button.textContent = "Start round " + round;
+      isCollision = false
+      numbere = 1
+    }
+
+    function up() {
+      positionY -= speed;
+      circle.style.top = positionY + "px";
+      checkCollision();
+      checksquare();
+    }
+
+    function down() {
+      positionY += speed;
+      circle.style.top = positionY + "px";
+      checkCollision();
+      checksquare();
+    }
+
+    function left() {
+      positionX -= speed;
+      circle.style.left = positionX + "px";
+      checkCollision();
+      checksquare();
+    }
+
+    function right() {
+      positionX += speed;
+      circle.style.left = positionX + "px";
+      checkCollision();
+      checksquare();
+    }
+
+    function up2() {
+      positionY2 -= speed2;
+      circle2.style.top = positionY2 + "px";
+      checkCollision();
+      checksquare();
+    }
+
+    function down2() {
+      positionY2 += speed2;
+      circle2.style.top = positionY2 + "px";
+      checkCollision();
+      checksquare();
+    }
+
+    function left2() {
+      positionX2 -= speed2;
+      circle2.style.left = positionX2 + "px";
+      checkCollision();
+      checksquare();
+    }
+
+    function right2() {
+      positionX2 += speed2;
+      circle2.style.left = positionX2 + "px";
+      checkCollision();
+      checksquare();
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "o" || event.key === "O") {
+        up();
+        checksquare();
+      } else if (event.key === "L" || event.key === "l") {
+        down();
+        checksquare();
+      } else if (event.key === "K" || event.key === "k") {
+        left();
+        checksquare();
+      } else if (event.key === "m" || event.key === "M") {
+        right();
+        checksquare();
+      }
+    }
+
+    function handleKeyDown2(event) {
+      if (event.key === "z" || event.key === "Z") {
+        up2();
+        checksquare();
+      } else if (event.key === "s" || event.key === "S") {
+        down2();
+        checksquare();
+      } else if (event.key === "q" || event.key === "Q") {
+        left2();
+        checksquare();
+      } else if (event.key === "d" || event.key === "D") {
+        right2();
+        checksquare();
+      }
+    }
+    var numbere = 1
+
+    function checkCollision() {
+      var circleRect = circle.getBoundingClientRect();
+      var smallRect = small.getBoundingClientRect();
+      var circle2Rect = circle2.getBoundingClientRect();
+      var small2Rect = small2.getBoundingClientRect();
+     
+
+      if (
+  numbere === 1 &&
+  circleRect.left < smallRect.right &&
+  circleRect.right > smallRect.left &&
+  circleRect.top < smallRect.bottom &&
+  circleRect.bottom > smallRect.top
+) {
+  isCollision = true;
+  circle.style.backgroundColor = "orange"; // Optional: Change color on collision
+  speed = 0;
+  numbere += 1;
+  display1();
+  button.style.display = "block"; // Corrected line
+} else {
+  circle.style.backgroundColor = "purple"; // Reset color if no collision
+}
+
+if (
+  numbere === 1 &&
+  circle2Rect.left < small2Rect.right &&
+  circle2Rect.right > small2Rect.left &&
+  circle2Rect.top < small2Rect.bottom &&
+  circle2Rect.bottom > small2Rect.top
+) {
+  isCollision = true;
+  circle2.style.backgroundColor = "orange"; // Optional: Change color on collision
+  speed2 = 0;
+  display2();
+  numbere += 1;
+  button.style.display = "block"; // Corrected line
+} else {
+  circle2.style.backgroundColor = "black"; // Reset color if no collision
+}
+    }
+    function display1() {
+      score += 1;
+      ele1.textContent = "Score = " + score;
+
+      if (score >= number) {
+        gameOn = false;
+        button.style.display = "block";
+        button.style.backgroundColor = "green";
+        button.textContent = "Start round " + round;
+      }
+    }
+
+    function display2() {
+      score2 += 1;
+      ele2.textContent = "Score = " + score2;
+
+      if (score2 >= number) {
+        gameOn = false;
+        button.style.display = "block";
+        button.style.backgroundColor = "green";
+        button.textContent = "Start round " + round;
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown2);
+
+   
+  </script>
+</body>
+</html>
